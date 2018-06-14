@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "game-data-proxy-v2"
+  labels:
+    app: "game-data-proxy"
+    version: v2
+data:
+  MATCHES_SERVICES_HOST: "game-data"
+  VERSION: "v2"
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "game-data-proxy-v2"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "game-data-proxy"
+        version: v2
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: "game-data-proxy"
+        image: "gcr.io/sensedia-bet/matches-proxy"
+        env:
+        - name: MATCHES_SERVICES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: "game-data-proxy-v2"
+              key: MATCHES_SERVICES_HOST
+        - name: VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: "game-data-proxy-v2"
+              key: VERSION
+        ports:
+        - name: http
+          containerPort: 9999
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthcheck
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 50
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 30
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthcheck
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 50
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 30

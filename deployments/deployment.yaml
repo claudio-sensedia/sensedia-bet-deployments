@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "game-data"
+  labels:
+    app: "game-data"
+data:
+  RABBIT_HOST: "rabbitmq-rabbitmq"
+  RABBIT_PORT: "5672"
+  MONGO_HOST: "mongodb-mongodb"
+  MONGO_PORT: "27017"
+  ENV_SPRING: "prod"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "game-data"
+type: Opaque
+data:
+  MONGO_USER: c2Vuc2VkaWEtYmV0
+  MONGO_PASS: YmV0QDIwMTg=
+  RABBIT_USER: c2Vuc2VkaWEtYmV0
+  RABBIT_PASS: YmV0QDIwMTg=
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: "game-data"
+  labels:
+    app: "game-data"
+spec:
+  selector:
+    app: "game-data"
+  ports:
+  - name: http
+    port: 7777
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "game-data"
+  labels:
+    app: "game-data"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "game-data"
+        tier: backend
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: "game-data"
+        image: "gcr.io/sensedia-bet/game_data:latest"
+        env:
+        - name: RABBIT_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: "game-data"
+              key: RABBIT_HOST
+        - name: RABBIT_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: "game-data"
+              key: RABBIT_PORT
+        - name: MONGO_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: "game-data"
+              key: MONGO_HOST
+        - name: MONGO_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: "game-data"
+              key: MONGO_PORT
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: "game-data"
+              key: ENV_SPRING
+        - name: RABBIT_USER
+          valueFrom:
+            secretKeyRef:
+              name: "game-data"
+              key: RABBIT_USER
+        - name: RABBIT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: "game-data"
+              key: RABBIT_PASS
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: "game-data"
+              key: MONGO_USER
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: "game-data"
+              key: MONGO_PASS
+        - name: MATCHES
+          valueFrom:
+            configMapKeyRef:
+              name: "game-data-matches"
+              key: "MATCHES"
+        ports:
+        - name: http
+          containerPort: 7777
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /actuator/health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 50
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 30
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /actuator/health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 50
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 30

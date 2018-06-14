@@ -1,0 +1,15 @@
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: game-data-proxy-default
+spec:
+  destination:
+    name: "game-data-proxy"
+  precedence: 2
+  route:
+  - labels:
+      version: v1
+    weight: 50
+  - labels:
+      version: v2
+    weight: 50
