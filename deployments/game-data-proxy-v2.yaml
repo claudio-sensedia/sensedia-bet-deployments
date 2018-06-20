@@ -6,7 +6,6 @@ metadata:
     app: "game-data-proxy"
     version: v2
 data:
-  MATCHES_SERVICES_HOST: "game-data"
   VERSION: "v2"
 ---
 apiVersion: extensions/v1beta1
@@ -14,7 +13,7 @@ kind: Deployment
 metadata:
   name: "game-data-proxy-v2"
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -26,11 +25,11 @@ spec:
       - name: "game-data-proxy"
         image: "gcr.io/sensedia-bet/matches-proxy"
         env:
-        - name: MATCHES_SERVICES_HOST
+        - name: MATCHES_SERVICES
           valueFrom:
             configMapKeyRef:
-              name: "game-data-proxy-v2"
-              key: MATCHES_SERVICES_HOST
+              name: "game-data-proxy-v1"
+              key: MATCHES_SERVICES
         - name: VERSION
           valueFrom:
             configMapKeyRef:

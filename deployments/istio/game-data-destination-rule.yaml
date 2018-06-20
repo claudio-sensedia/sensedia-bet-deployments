@@ -1,0 +1,11 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: "game-data-destination"
+  namespace: development
+spec:
+  host: "game-data"
+  subsets:
+  - name: v1
+    labels:
+      version: v1

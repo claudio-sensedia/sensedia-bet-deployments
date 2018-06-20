@@ -6,7 +6,7 @@ metadata:
     app: "game-data-proxy"
     version: v1
 data:
-  MATCHES_SERVICES_HOST: "game-data"
+  MATCHES_SERVICES: "http://game-data:7777/api/matches"
   VERSION: "v1"
 ---
 kind: Service
@@ -39,11 +39,11 @@ spec:
       - name: "game-data-proxy"
         image: "gcr.io/sensedia-bet/matches-proxy"
         env:
-        - name: MATCHES_SERVICES_HOST
+        - name: MATCHES_SERVICES
           valueFrom:
             configMapKeyRef:
               name: "game-data-proxy-v1"
-              key: MATCHES_SERVICES_HOST
+              key: MATCHES_SERVICES
         - name: VERSION
           valueFrom:
             configMapKeyRef:
