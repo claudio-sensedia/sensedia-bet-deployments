@@ -48,6 +48,7 @@ spec:
       labels:
         app: "game-data"
         tier: backend
+        version: v1
     spec:
       terminationGracePeriodSeconds: 30
       containers:
