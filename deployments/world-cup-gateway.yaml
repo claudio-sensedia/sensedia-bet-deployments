@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: wc-gateway
+  name: "wc-gateway"
 spec:
   selector:
     istio: ingressgateway # use istio default controller
@@ -16,18 +16,26 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: wc-virtual-service
+  name: "world-cup-2018"
 spec:
   hosts:
   - "*"
   gateways:
-  - wc-gateway
+  - "wc-gateway"
   http:
   - match:
     - uri:
-        exact: /api/matches
+        prefix: /api/matches
     route:
     - destination:
-        host: game-data
+        host: "game-data"
         port:
           number: 7777
+  - match:
+    - uri:
+        exact: /matches
+    route:
+    - destination:
+        host: "game-data-proxy"
+        port:
+          number: 9999
