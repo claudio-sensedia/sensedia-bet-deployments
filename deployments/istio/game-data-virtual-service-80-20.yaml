@@ -10,8 +10,8 @@ spec:
     - destination:
         host: game-data
         subset: v1
-      weight: 80
+      weight: 100
     - destination:
         host: rgame-data
         subset: v2
-      weight: 20
+      weight:

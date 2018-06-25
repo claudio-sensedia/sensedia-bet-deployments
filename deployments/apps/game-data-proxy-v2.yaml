@@ -13,7 +13,7 @@ kind: Deployment
 metadata:
   name: "game-data-proxy-v2"
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:

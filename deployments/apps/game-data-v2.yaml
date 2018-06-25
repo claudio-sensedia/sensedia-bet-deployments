@@ -1,16 +1,3 @@
-kind: Service
-apiVersion: v1
-metadata:
-  name: game-data
-  labels:
-    app: game-data
-spec:
-  selector:
-    app: game-data
-  ports:
-  - name: http
-    port: 7777
----
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
