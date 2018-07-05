@@ -23,12 +23,12 @@ data:
 kind: Service
 apiVersion: v1
 metadata:
-  name: "game-data"
+  name: game-data
   labels:
-    app: "game-data"
+    app: game-data
 spec:
   selector:
-    app: "game-data"
+    app: game-data
   ports:
   - name: http
     port: 7777
@@ -42,13 +42,13 @@ spec:
   template:
     metadata:
       labels:
-        app: "game-data"
+        app: game-data
         version: v1
     spec:
       terminationGracePeriodSeconds: 30
       containers:
-      - name: "game-data"
-        image: "gcr.io/sensedia-bet/game_data:latest"
+      - name: game-data
+        image: sensediabet.azurecr.io/gamedata:latest
         env:
         - name: RABBIT_HOST
           valueFrom:
