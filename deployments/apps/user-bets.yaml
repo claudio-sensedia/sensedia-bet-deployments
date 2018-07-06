@@ -113,7 +113,7 @@ spec:
             secretKeyRef:
               key: MONGO_PASS
               name: user-bets
-        image: gcr.io/sensedia-bet/user_bets:latest
+        image: sensediabet.azurecr.io/user_bets:latest
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3

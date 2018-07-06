@@ -58,7 +58,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: ranking
-        image: gcr.io/sensedia-bet/ranking:latest
+        image: sensediabet.azurecr.io/ranking:latest
         env:
         - name: RABBIT_HOST
           valueFrom:
